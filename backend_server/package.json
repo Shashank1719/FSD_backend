@@ -1,0 +1,31 @@
+{
+    "name": "backend-fsd",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "babel-node": "babel-node --presets=@babel/preset-env",
+        "start": "nodemon --exec npm run babel-node -- app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@babel/cli": "^7.0.0",
+        "@babel/core": "^7.0.0",
+        "@babel/node": "^7.0.0",
+        "babel-upgrade": "^1.0.1",
+        "body-parser": "^1.20.3",
+        "dotenv": "^16.4.7",
+        "nodemon": "^3.1.9",
+        "passport": "^0.7.0",
+        "passport-local-mongoose": "^8.0.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.26.0",
+        "@babel/core": "^7.26.0",
+        "@babel/node": "^7.26.0",
+        "@babel/preset-env": "^7.26.0"
+    }
+}

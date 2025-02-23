@@ -4,6 +4,7 @@ const cors = require('cors')
 import bodyParser from "body-parser"
 import passport from "passport"
 import mongoose from "mongoose"
+const expressJwt = require('express-jwt');
 
 //routers
 import { buildUserRouter} from "./routes/Router.js"

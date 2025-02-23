@@ -6,13 +6,15 @@ dotenv.config()
 
 import buildUserDb from "./users"
 import buildJwtController from "./jwtController"
+import buildCardDb from "./cards"
+import buildTransactionDb from "./transactions"
 
 const userSchema = new mongoose.Schema({
     username: String,
     emailId: String,
     dateOfBirth: Date,
     createdAt: Date,
-    userType: String, 
+    user_type: String, 
     isVerified: Boolean,
 })
 userSchema.plugin(passportLocalMongoose, {
@@ -22,9 +24,39 @@ userSchema.plugin(passportLocalMongoose, {
         MissingPasswordError: "password_empty",
         MissingUsernameError: "username_empty",
         UserExistsError: "username_duplicate",
+        EmailExistsError: "emailId_duplicate",
         NoSaltValueStoredError: "username_incorrect",
     },
 })
 const User = new mongoose.model("users", userSchema)
 export const userJwtController = buildJwtController(jwt, "process.env.JWT_SECRET")
 export const userDb = buildUserDb(User, userJwtController)
+
+const cardSchema = new mongoose.Schema({
+    cardTitle: String,
+    description: String,
+    imageUrl: String,
+    category: Array,
+    rarity: String,
+    price: String,
+    global: String,
+    streamerEmailId: String,
+    userEmailId: String,
+})
+
+const Card = new mongoose.model("cards", cardSchema)
+export const cardDb = buildCardDb(Card)
+
+const transactionSchema = new mongoose.Schema({
+    cardId:String,
+    streamerEmailId:String,
+    userEmailId:String,
+    isUsed:Boolean,
+    purchaseDate:Date,
+    title:String,
+    description:String
+})
+
+const Transaction = new mongoose.model("transactions", transactionSchema)
+export const transactionDb = buildTransactionDb(Transaction, Card)
+

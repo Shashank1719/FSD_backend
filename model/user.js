@@ -1,6 +1,7 @@
 export default function buildMakeUser(){
     return function buildMakeUser({
         username,
+        userName,
         emailId,
         mobileNumber,
         dateOfBirth,
@@ -23,11 +24,12 @@ export default function buildMakeUser(){
         }
         return Object({
             username:username,
+            userName:userName,
             emailId:emailId,
             mobileNumber:mobileNumber,
             dateOfBirth:dateOfBirth,
             createdAt:createdAt,
-            userType: "viewer",
+            user_type: "viewer",
             isVerified:false
         })
     }

@@ -9,7 +9,9 @@ export default function existingCheck(db, jwtController){
             return{user};
         }catch(err){
             console.log(err);
-            return{Error:err};
+            if (err.message == "JsonWebTokenError" || err.message == "TokenExpiredError")
+                { return {"status": "jwterror", "error": "Token Expired or Unauthenticated"}}
+            return{status:"failure",error:err.message};
         }
     }
 }

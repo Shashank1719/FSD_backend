@@ -1,5 +1,5 @@
-export default function buildGetUserCards(transactionDb) {
-    return async function getUserCards(emailId) {
+export default function buildGetUserCards(transactionDb, jwtController) {
+    return async function getUserCards(emailId, token) {
         try {
             let cards = await transactionDb.getUserCards(emailId);
             return {
@@ -8,6 +8,8 @@ export default function buildGetUserCards(transactionDb) {
             }
         } catch (err) {
             console.log(err)
+            if (err.message == "JsonWebTokenError" || err.message == "TokenExpiredError")
+                { return {"status": "jwterror", "error": "Token Expired or Unauthenticated"}}
             return {
                 status: "failure",
                 message: err.message

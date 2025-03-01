@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     createdAt: Date,
     user_type: String, 
     isVerified: Boolean,
+    youtubeLink: String,
+    instagramLink: String,
+    description: String,
+    userName: String,
 })
 userSchema.plugin(passportLocalMongoose, {
     errorMessages: {
@@ -29,7 +33,7 @@ userSchema.plugin(passportLocalMongoose, {
     },
 })
 const User = new mongoose.model("users", userSchema)
-export const userJwtController = buildJwtController(jwt, "process.env.JWT_SECRET")
+export const userJwtController = buildJwtController(jwt)
 export const userDb = buildUserDb(User, userJwtController)
 
 const cardSchema = new mongoose.Schema({
@@ -58,5 +62,5 @@ const transactionSchema = new mongoose.Schema({
 })
 
 const Transaction = new mongoose.model("transactions", transactionSchema)
-export const transactionDb = buildTransactionDb(Transaction, Card)
+export const transactionDb = buildTransactionDb(Transaction, Card, User)
 

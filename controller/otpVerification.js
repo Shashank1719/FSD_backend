@@ -1,6 +1,5 @@
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const redisClient = require("./redisClient");
 const { getRedisClient } = require("./redisClient");
 
 // Nodemailer setup
@@ -27,14 +26,14 @@ const sendOTP = async (email) => {
   const redisClient = await getRedisClient();
 
   redisClient.setEx(email, 600, otp);
-  console.log("redis done");
+  console.log("OTP stored in Redis with mail id: ", email);
 
   // Send email
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Your OTP Verification Code For Streamloots India Version",
-    html: `<p>Your OTP for Verification of your account at Streamloots India Version is : <b>${otp}</b><br/>OTP will be expire in 10 minutes.</p>`,
+    subject: "Your OTP Verification Code For Crezar India",
+    html: `<p>Your OTP for Verification of your account at Crezar India is : <b>${otp}</b><br/>OTP will expire in 10 minutes.</p>`,
   };
   console.log()
   await transporter.sendMail(mailOptions);

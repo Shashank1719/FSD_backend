@@ -5,6 +5,7 @@ export  function buildCreateUser(userDb){
             httpBody.dateOfBirth = new Date(httpBody.dateOfBirth)
             httpBody.username = httpBody.emailId
             httpBody.createdAt = new Date()
+            httpBody.userName = httpBody.emailId.split('@')[0]
             const user=makeUser({
                 ...httpBody
             });

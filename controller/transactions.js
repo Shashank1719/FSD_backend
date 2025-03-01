@@ -1,13 +1,14 @@
-import { get } from "mongoose";
 import { sendJsonToQueue } from "./publisher";
 import { consumeJsonFromQueue } from "./consumer";
-export default function buildTransactionDb(transactionModel, cardModel) {
+const {return_hmac_secret} = require('./return_hmac_secret');
+
+export default function buildTransactionDb(transactionModel, cardModel, userModel) {
 
     async function create(rawTransaction) {
-        console.log("rawTransaction",rawTransaction)
-        let newTransaction = new transactionModel({...rawTransaction});
 
         try {
+            console.log("rawTransaction",rawTransaction)
+            let newTransaction = new transactionModel({...rawTransaction});
             
             newTransaction.save()
 
@@ -65,7 +66,8 @@ export default function buildTransactionDb(transactionModel, cardModel) {
                 if (card) {
                     card = card.toObject();
                     card.transactionId = userTransactions[i]._id
-                    card.isUsed = userTransactions[i].isUsed    
+                    card.isUsed = userTransactions[i].isUsed
+                    card.streamerEmailId = userTransactions[i].streamerEmailId
                     if (userTransactions[i].isUsed) {
                         card.cardTitle=userTransactions[i].title || card.cardTitle;
                         card.description=userTransactions[i].description || card.description;
@@ -93,7 +95,7 @@ export default function buildTransactionDb(transactionModel, cardModel) {
                 console.log("Updating the card as per title and description")
                 card.cardTitle=newTitle;
                 card.description=newDescription;
-                await sendJsonToQueue(emailId, card);
+                await sendJsonToQueue(return_hmac_secret({emailId: cardData.streamerEmailId}), card);
                 await transactionModel.findOneAndUpdate(
                     {_id : cardData.transactionId}, 
                     {isUsed: true, title: newTitle, description: newDescription}, 
@@ -104,7 +106,7 @@ export default function buildTransactionDb(transactionModel, cardModel) {
             }
             if (newTitle) {
                 card.title=newTitle;
-                await sendJsonToQueue(emailId, card);
+                await sendJsonToQueue(return_hmac_secret({emailId: cardData.streamerEmailId}), card);
                 await transactionModel.findOneAndUpdate(
                     {_id : cardData.transactionId}, 
                     {isUsed: true, title: newTitle}, 
@@ -115,7 +117,7 @@ export default function buildTransactionDb(transactionModel, cardModel) {
             }
             if (newDescription) {
                 card.description=newDescription;
-                await sendJsonToQueue(emailId, card);
+                await sendJsonToQueue(return_hmac_secret({emailId: cardData.streamerEmailId}), card);
                 await transactionModel.findOneAndUpdate(
                     {_id : cardData.transactionId}, 
                     {isUsed: true, description: newDescription}, 
@@ -124,7 +126,7 @@ export default function buildTransactionDb(transactionModel, cardModel) {
 
                 return true
             }
-            await sendJsonToQueue(emailId, card)
+            await sendJsonToQueue(return_hmac_secret({emailId: cardData.streamerEmailId}), card)
             console.log("transactionId",cardData.transactionId)
             await transactionModel.findOneAndUpdate(
                 {_id : cardData.transactionId}, 
@@ -140,7 +142,7 @@ export default function buildTransactionDb(transactionModel, cardModel) {
     async function getCardFromQueue(emailId){
         try{
             console.log("In getCardFromQueue",emailId);
-            let cardsToReturn = await consumeJsonFromQueue(emailId);
+            let cardsToReturn = await consumeJsonFromQueue(encodeURIComponent(emailId));
             return cardsToReturn
         }
         catch(err){

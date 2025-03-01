@@ -5,7 +5,10 @@ export default function buildMakeUser(){
         emailId,
         mobileNumber,
         dateOfBirth,
-        createdAt    
+        createdAt,
+        youtubeLink,
+        instagramLink,
+        description
     }){
         if(!username){
             throw new Error("Username is empty");
@@ -30,7 +33,10 @@ export default function buildMakeUser(){
             dateOfBirth:dateOfBirth,
             createdAt:createdAt,
             user_type: "viewer",
-            isVerified:false
+            isVerified:false,
+            youtubeLink:"",
+            instagramLink:"",
+            description:""
         })
     }
 }

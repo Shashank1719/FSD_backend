@@ -13,6 +13,8 @@ export default function buildVerifyUserInDb(userDb, jwtController){
         }
         catch(err){
             console.error(err);
+            if (err.message == "JsonWebTokenError" || err.message == "TokenExpiredError")
+                { return {"status": "jwterror", "error": "Token Expired or Unauthenticated"}}
             return {"verify": false, "error": err.message}
         }
     }

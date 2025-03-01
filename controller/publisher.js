@@ -5,7 +5,7 @@ async function sendJsonToQueue(queue_name, msg) {
     const jsonObject = msg;
 
     try {
-        const connection = await amqp.connect('amqp://guest:guest@rabbitmq:5672');
+        const connection = await amqp.connect(`amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@rabbitmq:${process.env.RABBITMQ_PORT}`);
         const channel = await connection.createChannel();
 
         await channel.assertQueue(queue, { durable: false });

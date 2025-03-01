@@ -1,4 +1,6 @@
 const { sendOTP, verifyOTP } = require('./otpVerification');
+const {return_hmac_secret} = require('./return_hmac_secret');
+
 export default function buildUserDb(userModel,jwtController){
     async function register(rawUser,password){
         let newUser=new userModel({...rawUser});
@@ -109,7 +111,28 @@ export default function buildUserDb(userModel,jwtController){
       let users = await userModel.find(null,null,null);
       return users;
     }
-    
+    async function editUser(emailId, newUser) {
+      try {
+          let user = await userModel.findOneAndUpdate(
+              {emailId : emailId}, 
+              newUser, 
+              { upsert: true, setDefaultsOnInsert: true })
+
+          return {updated: true}
+      } catch (error) {
+          return error
+      }
+   }
+   
+   async function getStreamerURL(emailId) {
+    try{
+      const hmac = return_hmac_secret(emailId);
+      return hmac;
+    } catch(err){
+      throw err
+    }
+  }
+
     return Object.freeze({
         register:register,
         exists:exists,
@@ -120,6 +143,8 @@ export default function buildUserDb(userModel,jwtController){
         returnIsVerified,
         makeStreamer,
         returnAllStreamers,
-        returnAllUsers
+        returnAllUsers,
+        editUser,
+        getStreamerURL
     });
 }

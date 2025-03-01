@@ -26,15 +26,14 @@ app.use(express.json({ limit: '100mb' }))
 app.use(express.text({ limit: '100mb' }))
 app.use(express.urlencoded({ limit: '100mb' }))
 app.use(express.raw({ limit: '100mb' }))
-//
 app.use(passport.initialize())
 
 const userAuthAPIRouter = buildUserRouter()
 
 app.use("/auth/user", userAuthAPIRouter)
 
-app.listen(5000, function (req, res) {
-    mongoose.connect("mongodb+srv://Deep2:1n7RJVCpFkeuz2rf@cluster0.p8idm.mongodb.net/fsddb?retryWrites=true&w=majority", {
+app.listen(process.env.PORT, function (req, res) {
+    mongoose.connect(process.env.MONGO_URL, {
     })
-    console.log("Server started at http://localhost:5000")
+    console.log(`Server started at port: ${process.env.PORT}`)
 })

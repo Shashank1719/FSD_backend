@@ -32,8 +32,9 @@ const userAuthAPIRouter = buildUserRouter()
 
 app.use("/auth/user", userAuthAPIRouter)
 
-app.listen(process.env.PORT, function (req, res) {
+port = process.env.PORT || 5000
+app.listen(port, function (req, res) {
     mongoose.connect(process.env.MONGO_URL, {
     })
-    console.log(`Server started at port: ${process.env.PORT}`)
+    console.log(`Server started at port: ${port}`)
 })

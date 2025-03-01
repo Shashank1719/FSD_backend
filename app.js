@@ -32,7 +32,7 @@ const userAuthAPIRouter = buildUserRouter()
 
 app.use("/auth/user", userAuthAPIRouter)
 
-port === process.env.PORT || 5000
+const port = process.env.PORT || 5000
 app.listen(port, function (req, res) {
     mongoose.connect(process.env.MONGO_URL, {
     })
